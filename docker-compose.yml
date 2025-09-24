@@ -2,7 +2,9 @@ version: '3.8'
 
 services:
   vibe-box:
-    build: .
+    image: neuhausnrw/vibe-box:latest
+    # Uncomment the line below to build locally instead
+    # build: .
     container_name: vibe-coding-sandbox
     hostname: vibe-box
     stdin_open: true

@@ -33,10 +33,38 @@ docker run -it --privileged -p 3000:3000 -p 8080:8080 vibe-box
 - `CLAUDE_API_KEY` - Claude API key for CLI access
 - `START_FRANKENPHP` - Set to "true" to auto-start FrankenPHP server
 
-## Publishing to Docker Hub
+## Docker Hub
 
-1. Build the image: `docker build -t your-username/vibe-box .`
-2. Push to Docker Hub: `docker push your-username/vibe-box`
+The image is available on Docker Hub: `neuhausnrw/vibe-box`
+
+### Using Pre-built Image
+
+```bash
+# Pull and run the latest image
+docker run -it --privileged -p 3000:3000 -p 8080:8080 neuhausnrw/vibe-box
+
+# Or use docker-compose (update image name in docker-compose.yml)
+docker-compose up -d
+```
+
+### Building Locally
+
+```bash
+docker build -t neuhausnrw/vibe-box .
+docker run -it --privileged -p 3000:3000 -p 8080:8080 neuhausnrw/vibe-box
+```
+
+### GitHub Actions
+
+The repository includes a GitHub Action that automatically:
+- Builds multi-architecture images (AMD64 + ARM64)
+- Pushes to Docker Hub on every commit to main
+- Creates tagged releases for version tags (v1.0.0, etc.)
+
+**Setup Requirements:**
+1. Add GitHub repository secrets:
+   - `DOCKER_USERNAME`: Your Docker Hub username
+   - `DOCKER_PASSWORD`: Your Docker Hub password or access token
 
 ## Traefik Integration
 
