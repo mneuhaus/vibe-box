@@ -27,20 +27,16 @@ RUN apt-get update && apt-get install -y \
     tar \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Node.js and pnpm
+# Install Node.js, pnpm, FrankenPHP, PHP, and CLI tools in one layer
 RUN curl -fsSL https://deb.nodesource.com/setup_${NODE_VERSION}.x | bash - \
     && apt-get install -y nodejs \
-    && npm install -g pnpm@${PNPM_VERSION}
-
-# Install FrankenPHP
-RUN ARCH=$(dpkg --print-architecture) \
+    && npm install -g pnpm@${PNPM_VERSION} \
+    && ARCH=$(dpkg --print-architecture) \
     && if [ "$ARCH" = "amd64" ]; then ARCH="x86_64"; fi \
     && if [ "$ARCH" = "arm64" ]; then ARCH="aarch64"; fi \
     && curl -fsSL "https://github.com/dunglas/frankenphp/releases/latest/download/frankenphp-linux-${ARCH}" -o /usr/local/bin/frankenphp \
-    && chmod +x /usr/local/bin/frankenphp
-
-# Install PHP (required for FrankenPHP)
-RUN add-apt-repository ppa:ondrej/php \
+    && chmod +x /usr/local/bin/frankenphp \
+    && add-apt-repository ppa:ondrej/php \
     && apt-get update \
     && apt-get install -y \
     php8.2 \
@@ -50,11 +46,8 @@ RUN add-apt-repository ppa:ondrej/php \
     php8.2-mbstring \
     php8.2-xml \
     php8.2-zip \
+    && npm install -g @anthropic-ai/claude-code @openai/codex \
     && rm -rf /var/lib/apt/lists/*
-
-# Install Claude Code CLI and Codex (as root)
-RUN npm install -g @anthropic-ai/claude-code
-RUN npm install -g @openai/codex
 
 # Create a non-root user
 RUN useradd -m -s /usr/bin/zsh -G sudo vibe \

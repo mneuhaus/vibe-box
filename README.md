@@ -57,7 +57,7 @@ docker run -it --privileged -p 3000:3000 -p 8080:8080 neuhausnrw/vibe-box
 ### GitHub Actions
 
 The repository includes a GitHub Action that automatically:
-- Builds multi-architecture images (AMD64 + ARM64)
+- Builds AMD64 images (ARM64 support planned)
 - Pushes to Docker Hub on every commit to main
 - Creates tagged releases for version tags (v1.0.0, etc.)
 
