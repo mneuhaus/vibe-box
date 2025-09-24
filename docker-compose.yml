@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  vibe-box:
+    build: .
+    container_name: vibe-coding-sandbox
+    hostname: vibe-box
+    stdin_open: true
+    tty: true
+    privileged: true  # Required for Tailscale
+    volumes:
+      - ./workspace:/home/vibe/workspace
+      - /var/lib/tailscale:/var/lib/tailscale
+    ports:
+      - "3000:3000"   # Common dev server port
+      - "8000:8000"   # Alternative dev port
+      - "8080:8080"   # FrankenPHP default
+    environment:
+      # Uncomment and set these as needed
+      # - TAILSCALE_AUTHKEY=your_tailscale_auth_key
+      # - GIT_USER_NAME=Your Name
+      # - GIT_USER_EMAIL=your.email@example.com
+      # - CLAUDE_API_KEY=your_claude_api_key
+      # - START_FRANKENPHP=true
+    networks:
+      - traefik
+    labels:
+      # Traefik labels for automatic HTTPS setup
+      - "traefik.enable=true"
+      - "traefik.http.routers.vibe-box.rule=Host(`vibe.yourdomain.com`)"
+      - "traefik.http.routers.vibe-box.entrypoints=websecure"
+      - "traefik.http.routers.vibe-box.tls.certresolver=letsencrypt"
+      - "traefik.http.services.vibe-box.loadbalancer.server.port=3000"
+
+networks:
+  traefik:
+    external: true
+
+volumes:
+  workspace:
+    driver: local
